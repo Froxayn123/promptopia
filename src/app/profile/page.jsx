@@ -9,6 +9,7 @@ import Profile from "@/components/Profile";
 const MyProfile = () => {
   const router = useRouter();
   const { data: session } = useSession();
+  const [loading, setLoading] = useState(true);
 
   const [myPosts, setMyPosts] = useState([]);
 
@@ -18,6 +19,7 @@ const MyProfile = () => {
       const data = await response.json();
 
       setMyPosts(data);
+      setLoading(false);
     };
 
     if (session?.user.id) fetchPosts();
@@ -45,7 +47,16 @@ const MyProfile = () => {
     }
   };
 
-  return <Profile name="My" desc="Welcome to your personalized profile page. Share your exceptional prompts and inspire others with the power of your imagination" data={myPosts} handleEdit={handleEdit} handleDelete={handleDelete} />;
+  return (
+    <Profile
+      name="My"
+      desc="Welcome to your personalized profile page. Share your exceptional prompts and inspire others with the power of your imagination"
+      data={myPosts}
+      handleEdit={handleEdit}
+      handleDelete={handleDelete}
+      loading={loading}
+    />
+  );
 };
 
 export default MyProfile;

@@ -8,7 +8,7 @@ import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 const Nav = () => {
   const { data: session } = useSession();
 
-  const [providers, setProviders] = useState(null);
+  const [providers, setProviders] = useState({ name: "", id: "" });
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
   useEffect(() => {
@@ -42,21 +42,16 @@ const Nav = () => {
             </Link>
           </div>
         ) : (
-          <>
-            {providers &&
-              Object.values(providers).map((provider) => (
-                <button
-                  type="button"
-                  key={provider.name}
-                  onClick={() => {
-                    signIn(provider.id);
-                  }}
-                  className="black_btn"
-                >
-                  Sign in
-                </button>
-              ))}
-          </>
+          <button
+            type="button"
+            key={Object.values(providers)[0].name}
+            onClick={() => {
+              signIn(Object.values(providers)[0].id);
+            }}
+            className="black_btn"
+          >
+            Sign in
+          </button>
         )}
       </div>
 
@@ -88,21 +83,16 @@ const Nav = () => {
             )}
           </div>
         ) : (
-          <>
-            {providers &&
-              Object.values(providers).map((provider) => (
-                <button
-                  type="button"
-                  key={provider.name}
-                  onClick={() => {
-                    signIn(provider.id);
-                  }}
-                  className="black_btn"
-                >
-                  Sign in
-                </button>
-              ))}
-          </>
+          <button
+            type="button"
+            key={Object.values(providers)[0].name}
+            onClick={() => {
+              signIn(Object.values(providers)[0].id);
+            }}
+            className="black_btn"
+          >
+            Sign in
+          </button>
         )}
       </div>
     </nav>

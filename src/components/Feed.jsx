@@ -3,9 +3,12 @@
 import { useState, useEffect } from "react";
 
 import PromptCard from "./PromptCard";
+import Loading from "./Loading";
 
 const PromptCardList = ({ data, handleTagClick }) => {
-  return (
+  return data == 0 ? (
+    <h1 className="mt-16 font-inter text-sm text-gray-500">No prompt found</h1>
+  ) : (
     <div className="mt-16 prompt_layout">
       {data.map((post) => (
         <PromptCard key={post._id} post={post} handleTagClick={handleTagClick} />
@@ -19,18 +22,20 @@ const Feed = () => {
 
   // Search states
   const [searchText, setSearchText] = useState("");
-  const [searchTimeout, setSearchTimeout] = useState(null);
   const [searchedResults, setSearchedResults] = useState([]);
 
   const fetchPosts = async () => {
     const response = await fetch("/api/prompt");
     const data = await response.json();
-
     setAllPosts(data);
   };
 
   useEffect(() => {
-    fetchPosts();
+    try {
+      fetchPosts();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const filterPrompts = (searchtext) => {
@@ -39,16 +44,10 @@ const Feed = () => {
   };
 
   const handleSearchChange = (e) => {
-    clearTimeout(searchTimeout);
     setSearchText(e.target.value);
 
-    // debounce method
-    setSearchTimeout(
-      setTimeout(() => {
-        const searchResult = filterPrompts(e.target.value);
-        setSearchedResults(searchResult);
-      }, 500)
-    );
+    const searchResult = filterPrompts(e.target.value);
+    setSearchedResults(searchResult);
   };
 
   const handleTagClick = (tagName) => {
@@ -65,7 +64,7 @@ const Feed = () => {
       </form>
 
       {/* All Prompts */}
-      {searchText ? <PromptCardList data={searchedResults} handleTagClick={handleTagClick} /> : <PromptCardList data={allPosts} handleTagClick={handleTagClick} />}
+      {allPosts.length == 0 ? <Loading /> : searchText ? <PromptCardList data={searchedResults} handleTagClick={handleTagClick} /> : <PromptCardList data={allPosts} handleTagClick={handleTagClick} />}
     </section>
   );
 };

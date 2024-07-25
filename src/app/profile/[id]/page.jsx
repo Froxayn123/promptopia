@@ -13,20 +13,14 @@ const UserProfile = () => {
 
   const [userPosts, setUserPosts] = useState([]);
 
-  const fetchPosts = async () => {
-    const response = await fetch(`/api/users/${id}/posts`);
-    const data = await response.json();
-    setUserPosts(data);
-    setLoading(false);
-    console.log(data);
-  };
-
   useEffect(() => {
-    try {
-      fetchPosts();
-    } catch (error) {
-      console.log(error);
-    }
+    const fetchPosts = async () => {
+      const response = await fetch(`/api/users/${id}/posts`);
+      const data = await response.json();
+      setUserPosts(data);
+      setLoading(false);
+    };
+    fetchPosts();
   }, []);
 
   return <Profile name={userName} desc={`Welcome to ${userName}'s personalized profile page. Explore ${userName}'s exceptional prompts and be inspired by the power of their imagination`} data={userPosts} loading={loading} />;
